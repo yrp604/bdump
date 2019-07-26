@@ -262,6 +262,7 @@ function __fixup_regs(regs) {
     // if es was lost to the void, copy ds
     if (regs.es === null) {
         logln("[bdump] could not recover es, copying ds...");
+        regs.es = {};
         Object.assign(regs.es, regs.ds);
         logln('[bdump]');
     }
