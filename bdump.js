@@ -318,7 +318,7 @@ function __bdump(path) {
     logln('[bdump] register fixups...');
     __fixup_regs(regs);
     __save_regs(path, regs);
-    logln('[bdump] saving mem...');
+    logln('[bdump] saving mem, get a coffee or have a smoke, this will probably take around 10-15 minutes...');
     __save_mem(path);
 
     logln('[bdump] done!');

@@ -4,9 +4,23 @@ A windbg-js plugin to dump the cpu state.
 
 ## Usage
 
+You'll probably want the VM to have 1 vCPU. Sometimes kd gets confused about
+which CPU scripts run on. Additionally, once you hit your bp you should verify
+that `GSBASE` and `KERNEL_GSBASE` are different:
+
 ```
-0: kd> .scriptload c:\path\to\bdump.js
-0: kd> !bdump "c:\\path\\to\\dump"
+kd> rdmsr c0000101
+msr[c0000101] = 0x41414141
+kd> rdmsr c0000102
+msr[c0000102] = 0x42424242
+```
+
+If they are the same, youll need to hit the bp again. I have no idea why this
+happens.
+
+```
+kd> .scriptload c:\path\to\bdump.js
+kd> !bdump "c:\\path\\to\\dump"
 ```
 
 This will create two files:
