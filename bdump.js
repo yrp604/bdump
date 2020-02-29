@@ -259,6 +259,11 @@ function __fixup_regs(regs) {
         logln('[bdump]');
     }
 
+    if (is_usermode(regs.rip) && regs.cr8 != 0) {
+        logln("[bdump] non-zero IRQL in usermode, resetting to zero...");
+        regs.cr8 = 0;
+    }
+
     // if es was lost to the void, copy ds
     if (regs.es === null) {
         logln("[bdump] could not recover es, copying ds...");
