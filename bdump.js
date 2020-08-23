@@ -4,10 +4,12 @@ const log   = e => host.diagnostics.debugLog(e);
 const logln = e => log(e + '\n');
 const hex   = e => '0x' + e .toString(16);
 
-const is_usermode = e => e.bitwiseShiftRight(63) == 1;
+const is_usermode = e => e.bitwiseShiftRight(63) == 0;
 
 function usage() {
     logln('[bdump] Usage: !bdump "C:\\\\path\\\\to\\\\dump"')
+    logln('[bdump] Usage: !bdump_full "C:\\\\path\\\\to\\\\dump"')
+    logln('[bdump] Usage: !bdump_active_kernel "C:\\\\path\\\\to\\\\dump"')
     logln('[bdump] This will create a dump directory and fill it with a memory and register files');
     logln('[bdump] NOTE: you must include the quotes and escape the backslashes!');
 }
@@ -314,7 +316,7 @@ function __save_mem(dmp_type, path) {
         return;
     }
 
-    for (const line of control.ExecuteCommand(`dump ${option} ${path}\\mem.dmp`)) {
+    for (const line of control.ExecuteCommand(`.dump ${option} ${path}\\mem.dmp`)) {
         logln(`[bdump] ${line}`);
     }
 }
