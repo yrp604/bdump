@@ -4,10 +4,12 @@ const log   = e => host.diagnostics.debugLog(e);
 const logln = e => log(e + '\n');
 const hex   = e => '0x' + e .toString(16);
 
-const is_usermode = e => e.bitwiseShiftRight(63) == 1;
+const is_usermode = e => e.bitwiseShiftRight(63) == 0;
 
 function usage() {
     logln('[bdump] Usage: !bdump "C:\\\\path\\\\to\\\\dump"')
+    logln('[bdump] Usage: !bdump_full "C:\\\\path\\\\to\\\\dump"')
+    logln('[bdump] Usage: !bdump_active_kernel "C:\\\\path\\\\to\\\\dump"')
     logln('[bdump] This will create a dump directory and fill it with a memory and register files');
     logln('[bdump] NOTE: you must include the quotes and escape the backslashes!');
 }
@@ -301,15 +303,25 @@ function __save_regs(path, regs) {
     file.Close();
 }
 
-function __save_mem(path) {
-    const Control = host.namespace.Debugger.Utility.Control;
+function __save_mem(dmp_type, path) {
+    const control = host.namespace.Debugger.Utility.Control;
+    const options = new Map([
+        ['full', '/f'],
+        ['active-kernel', '/ka']
+    ]);
 
-    for (let line of Control.ExecuteCommand('.dump /ka ' + path + '\\mem.dmp')) {
-        logln('[bdump] ' + line);
+    const option = options.get(dmp_type);
+    if(option == undefined) {
+        logln(`[bdump] ${dmp_type} is an unknown type`);
+        return;
+    }
+
+    for (const line of control.ExecuteCommand(`.dump ${option} ${path}\\mem.dmp`)) {
+        logln(`[bdump] ${line}`);
     }
 }
 
-function __bdump(path) {
+function __bdump(dmp_type, path) {
     if (path == undefined) {
         usage();
         return;
@@ -324,9 +336,17 @@ function __bdump(path) {
     __fixup_regs(regs);
     __save_regs(path, regs);
     logln('[bdump] saving mem, get a coffee or have a smoke, this will probably take around 10-15 minutes...');
-    __save_mem(path);
+    __save_mem(dmp_type, path);
 
     logln('[bdump] done!');
+}
+
+function __bdump_full(path) {
+    return __bdump('full', path);
+}
+
+function __bdump_active_kernel(path) {
+    return __bdump('active-kernel', path);
 }
 
 function initializeScript() {
@@ -334,6 +354,9 @@ function initializeScript() {
 
     return [
         new host.apiVersionSupport(1, 2),
-        new host.functionAlias(__bdump, "bdump"),
+        new host.functionAlias(__bdump_full, "bdump_full"),
+
+        new host.functionAlias(__bdump_active_kernel, "bdump_active_kernel"),
+        new host.functionAlias(__bdump_active_kernel, "bdump"),
     ];
 }
