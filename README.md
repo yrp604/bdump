@@ -4,9 +4,9 @@ A windbg-js plugin to dump the cpu state.
 
 ## Usage
 
-You'll probably want the VM to have 1 vCPU. Sometimes kd gets confused about
-which CPU scripts run on. Additionally, once you hit your bp you should verify
-that `GSBASE` and `KERNEL_GSBASE` are different:
+Only tested with Hyper-V. You'll probably want the VM to have 1 vCPU. Sometimes
+kd gets confused about which CPU scripts run on. Additionally, once you hit your
+bp you should verify that `GSBASE` and `KERNEL_GSBASE` are different:
 
 ```
 kd> rdmsr c0000101
