@@ -95,6 +95,11 @@ function __collect_seg(n) {
     r.base     = host.parseInt64(chunks[1].replace('`', ''), 16);
     r.limit    = host.parseInt64(chunks[2].replace('`', ''), 16);
     r.attr     = host.parseInt64(chunks[chunks.length - 1].replace('`', ''), 16);
+    // attr needs to be fixed to include bits 16-19 of limit
+    // since the flags field from windbg removes these bits
+    // bochs and windows hypervisor platform expect these bits to be correct
+    r.attr = r.attr.bitwiseAnd(0xFF) + r.attr.bitwiseAnd(0xF00).bitwiseShiftLeft(4) + 
+        r.limit.bitwiseShiftRight(8).bitwiseAnd(0xF00);
 
     return r;
 }
@@ -236,16 +241,6 @@ function __fixup_regs(regs) {
         regs.tr.base = new_tr;
 
         logln('[bdump] new tr.base: ' + hex(regs.tr.base));
-        logln('[bdump]');
-    }
-
-    // need to make sure cs has that magic value set?
-    const flag = host.Int64(0x2000);
-    if (regs.cs.attr.bitwiseAnd(flag) != flag) {
-        logln('[bdump] setting flag 0x2000 on cs.attr...');
-        logln('[bdump] old cs.attr: ' + hex(regs.cs.attr));
-        regs.cs.attr = regs.cs.attr.bitwiseOr(flag);
-        logln('[bdump] new cs.attr: ' + hex(regs.cs.attr));
         logln('[bdump]');
     }
 
