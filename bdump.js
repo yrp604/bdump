@@ -98,6 +98,8 @@ function __collect_seg(n) {
     // attr needs to be fixed to include bits 16-19 of limit
     // since the flags field from windbg removes these bits
     // bochs and windows hypervisor platform expect these bits to be correct
+    //
+    // See  Figure 3.8 (Segment Descriptor) in section 3.4.5 (Segment Descriptors) in Volume 3A of the intel manuals.
     r.attr = r.attr.bitwiseAnd(0xFF) + r.attr.bitwiseAnd(0xF00).bitwiseShiftLeft(4) + 
         r.limit.bitwiseShiftRight(8).bitwiseAnd(0xF00);
 
