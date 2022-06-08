@@ -218,8 +218,8 @@ function __collect_kern(regs) {
 
 function __fixup_regs(regs) {
     // regs im not sure how to get out of windbg...
-    logln("[bdump] don't know how to get mxcsr_mask or fpop, setting to zero...");
-    regs.mxcsr_mask = 0xffbf; // default value from linux kernel 
+    logln("[bdump] don't know how to get mxcsr_mask or fpop, setting mxcsr_mask to 0xffbf and fpop to zero...");
+    regs.mxcsr_mask = 0xffbf; // default value from linux kernel: https://elixir.bootlin.com/linux/latest/source/arch/x86/kernel/fpu/init.c#L117
     regs.fpop       = 0;
     logln('[bdump]');
 
