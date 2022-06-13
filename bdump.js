@@ -79,7 +79,7 @@ function __collect_seg(n) {
     const Control = host.namespace.Debugger.Utility.Control;
 
     let r = {};
-    let line = Control.ExecuteCommand('dg ' + n).Last();
+    let line = Control.ExecuteCommand('dg @' + n).Last();
     // Sel        Base              Limit          Type    l ze an es ng Flags
     // ---- ----------------- ----------------- ---------- - -- -- -- -- --------
     // 0033 00000000`00000000 00000000`00000000 Code RE Ac 3 Nb By P  Lo 000002fb
