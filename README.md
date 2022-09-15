@@ -1,4 +1,4 @@
-# bdump
+# bdump [![CI](https://github.com/ch3rn0byl/bdump/actions/workflows/bdump.yml/badge.svg)](https://github.com/ch3rn0byl/bdump/actions/workflows/bdump.yml)
 
 A windbg-js plugin to dump the cpu state.
 
