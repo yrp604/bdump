@@ -43,4 +43,4 @@ jobs:
       with:
         if-no-files-found: error
         name: x64Release
-        path: x64\Release\bdump.dll
+        path: .\bdump\x64\Release\bdump.dll
